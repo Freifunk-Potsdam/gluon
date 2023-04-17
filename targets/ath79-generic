@@ -47,6 +47,13 @@ device('buffalo-wzr-hp-g300nh-rtl8366s', 'buffalo_wzr-hp-g300nh-s', {
 	},
 })
 
+-- comfast
+
+device('comfast-ew72', 'comfast_cf-ew72', {
+	packages = ATH10K_PACKAGES_QCA9880,
+	factory = false,
+})
+
 -- devolo
 
 device('devolo-wifi-pro-1200e', 'devolo_dvl1200e', {
