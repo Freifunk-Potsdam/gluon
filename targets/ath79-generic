@@ -570,6 +570,23 @@ device('tp-link-wbs510-v1', 'tplink_wbs510-v1', {
 
 -- Ubiquiti
 
+device('ubiquiti-nanostation-loco-m-xw', 'ubnt_nanostation-loco-m-xw', {
+	manifest_aliases = {
+		'ubiquiti-loco-m-xw', -- upgrade from OpenWrt 19.07
+		'ubiquiti-nanostation-loco-m2-xw', -- upgrade from OpenWrt 19.07
+		'ubiquiti-nanostation-loco-m5-xw', -- upgrade from OpenWrt 19.07
+	},
+})
+
+device('ubiquiti-nanostation-m-xw', 'ubnt_nanostation-m-xw', {
+	manifest_aliases = {
+		'ubiquiti-nanostation-m2-xw', -- upgrade from OpenWrt 19.07
+		'ubiquiti-nanostation-m5-xw', -- upgrade from OpenWrt 19.07
+	},
+})
+
+device('ubiquiti-rocket-m', 'ubnt_rocket-m')
+
 device('ubiquiti-unifi-ac-lite', 'ubnt_unifiac-lite', {
 	factory = false,
 	packages = ATH10K_PACKAGES_QCA9880,
