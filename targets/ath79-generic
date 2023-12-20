@@ -82,7 +82,7 @@ device('buffalo-wzr-hp-g300nh-rtl8366s', 'buffalo_wzr-hp-g300nh-s', {
 -- comfast
 
 device('comfast-cf-ew72', 'comfast_cf-ew72', {
-	packages = ATH10K_PACKAGES_QCA9880,
+	packages = ATH10K_PACKAGES_QCA9888,
 	factory = false,
 })
 
