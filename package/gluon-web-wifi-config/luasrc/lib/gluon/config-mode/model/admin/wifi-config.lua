@@ -71,6 +71,8 @@ uci:foreach('gluon', 'wireless_band', function(band_config)
 	elseif band == 'band_5g' then
 		is_5ghz = true
 		title = translate("5GHz WLAN")
+	elseif band == 'band_6g' then
+		title = translate("6GHz WLAN")
 	else
 		return
 	end
@@ -128,7 +130,7 @@ if wireless.device_uses_band(uci, '5g') and not wireless.preserve_channels(uci) 
 	))
 
 	local outdoor = r:option(Flag, 'outdoor', translate("Node will be installed outdoors"))
-	outdoor.default = uci:get_bool('gluon', 'wireless', 'outdoor')
+	outdoor.default = wireless.is_outdoor(uci)
 
 	for _, mesh_vif in ipairs(mesh_vifs_5ghz) do
 		mesh_vif:depends(outdoor, false)

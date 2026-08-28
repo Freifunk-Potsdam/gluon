@@ -153,12 +153,17 @@ ath79-generic
   - WBS210 (v1.20, v2.0)
   - WBS510 (v1.20)
 
+* Totolink 
+
+  - X5000R (v1)
+
 * Ubiquiti
 
   - NanoBeam 5AC 19 (XC)
   - NanoBeam M5 (XW)
   - NanoStation Loco M2/M5 (XW)
   - NanoStation M2/M5 (XW)
+  - Rocket M2/M5 (XM)
   - UniFi AC Lite
   - UniFi AC LR
   - UniFi AC Mesh
@@ -217,6 +222,10 @@ ipq40xx-generic
 * 8devices
 
   - Jalapeno
+
+* ASUS
+
+  - Lyra MAP-AC2200
 
 * Aruba
 
@@ -286,6 +295,10 @@ ipq40xx-mikrotik
 ipq806x-generic
 ---------------
 
+* Extreme Networks
+
+  - WS-AP3935i
+
 * NETGEAR
 
   - R7800
@@ -330,6 +343,10 @@ lantiq-xway
 mediatek-filogic
 ----------------
 
+* Acer
+
+  - Vero-W6M
+
 * ASUS
 
   - RT-AX52
@@ -339,9 +356,13 @@ mediatek-filogic
 * Cudy
 
   - AP3000 Outdoor (v1)
+  - M3000 (v1)
+  - RE3000 (v1)
   - TR3000 (v1)
   - WR3000 (v1)
   - WR3000e (v1)
+  - WR3000h (v1)
+  - WR3000s (v1)
 
 * D-Link
 
@@ -390,7 +411,11 @@ mediatek-mt7622
 
 * Ubiquiti
 
-  - UniFi 6 LR (v1)
+  - UniFi 6 LR (v1, v2, v3)
+
+* Xiaomi
+
+  - AX3200 / Redmi AX6S
 
 mvebu-cortexa53
 ---------------
@@ -440,6 +465,10 @@ mpc85xx-p1020
 qualcommax-ipq807x
 ------------------
 
+* Linksys
+
+  - MX5300
+
 * Xiaomi
 
   - Mi AIoT Router AX3600
@@ -488,6 +517,7 @@ ramips-mt7621
 
 * Cudy
 
+  - AP1300 Outdoor (v1)
   - WR1300 (v1)
   - WR2100
   - X6 (v1, v2)
@@ -511,6 +541,7 @@ ramips-mt7621
 * MERCUSYS
 
   - MR70X (v1)
+  - MR90X (v1)
 
 * NETGEAR
 
@@ -544,6 +575,8 @@ ramips-mt7621
 
   - Xiaomi Mi Router 3G (v1, v2)
   - Xiaomi Mi Router 4A (Gigabit Edition v1, v2)
+  - Xiaomi Mi Router AC2100
+  - Xiaomi Redmi Router AC2100
 
 * Zbtlink
 

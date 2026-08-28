@@ -73,7 +73,8 @@ end
 
 -- Iterate over all radios defined in UCI calling
 -- f(radio, index, site.wifiX) for each radio found while passing
---  site.wifi24 for 2.4 GHz devices and site.wifi5 for 5 GHz ones.
+--  site.wifi24 for 2.4 GHz devices, site.wifi5 for 5 GHz ones
+--  and site.wifi6 for 6 GHz devices
 function M.foreach_radio(uci, f)
 	local radios = {}
 
@@ -89,6 +90,8 @@ function M.foreach_radio(uci, f)
 			f(radio, index-1, site.wifi24)
 		elseif band == '5g' then
 			f(radio, index-1, site.wifi5)
+		elseif band == '6g' then
+			f(radio, index-1, site.wifi6)
 		end
 	end
 end
@@ -143,6 +146,14 @@ function M.device_uses_band(uci, band)
 	end)
 
 	return ret
+end
+
+function M.radio_roles(uci, radio)
+	return uci:get_list('gluon', 'band_' .. radio.band, 'role')
+end
+
+function M.is_outdoor(uci)
+	return uci:get_bool('gluon', 'wireless', 'outdoor')
 end
 
 return M

@@ -9,7 +9,7 @@ local uci = require('simple-uci').cursor()
 
 uci:delete_all('wireless', 'wifi-iface')
 
-local radio_band_count = {band_2g=0, band_5g=0}
+local radio_band_count = {band_2g=0, band_5g=0, band_6g=0}
 
 local function count_band(band)
 	radio_band_count[band] = radio_band_count[band] + 1
@@ -27,6 +27,9 @@ wireless.foreach_radio(uci, function(radio)
 	elseif (hwmodes.a or hwmodes.ac) and not hwmodes.g then
 		-- 5 GHz
 		count_band("band_5g")
+	elseif hwmodes.ax and not hwmodes.ac then
+		-- 6 GHz
+		count_band("band_6g")
 	end
 end)
 
@@ -49,12 +52,8 @@ wireless.foreach_radio(uci, function(radio)
 	end
 end)
 
-local function is_outdoor()
-	return uci:get_bool('gluon', 'wireless', 'outdoor')
-end
-
 local function get_channel(radio, config)
-	if (radio.band == '5g' and is_outdoor()) or not wireless.supports_channel(radio, config.channel()) then
+	if (radio.band == '5g' and wireless.is_outdoor(uci)) or not wireless.supports_channel(radio, config.channel()) then
 		-- actual channel will be picked and probed from chanlist
 		return 'auto'
 	end
@@ -67,23 +66,51 @@ local function get_htmode(radio)
 		return radio.htmode
 	end
 
-	if radio.band == '5g' and is_outdoor() then
+	if radio.band == '5g' and wireless.is_outdoor(uci) then
 		local outdoor_htmode = uci:get('gluon', 'wireless', 'outdoor_' .. radio['.name'] .. '_htmode')
 		if outdoor_htmode ~= nil then
 			return outdoor_htmode
 		end
 	end
 
+	local channel_width = 20
+
+	if radio.band == '2g' then
+		channel_width = site.wifi24.channel_width(20)
+	elseif radio.band == '5g' then
+		channel_width = site.wifi5.channel_width(20)
+	end
+
 	local phy = wireless.find_phy(radio)
+	local htmode
 	if iwinfo.nl80211.hwmodelist(phy).ax then
-		return 'HE20'
+		htmode = 'HE'
+	elseif iwinfo.nl80211.hwmodelist(phy).ac then
+		htmode = 'VHT'
+	else
+		htmode = 'HT'
 	end
 
-	if iwinfo.nl80211.hwmodelist(phy).ac then
-		return 'VHT20'
+	local last_width
+
+	for mode, available in pairs(iwinfo.nl80211.htmodelist(phy)) do
+		if available then
+			local hwmode = mode:match("%a+")
+			local width = tonumber(mode:match("%d+"))
+
+			if hwmode .. width == mode and hwmode == htmode then
+				if width == channel_width then
+					return hwmode .. width
+				end
+
+				if not last_width or width > last_width then
+					last_width = width
+				end
+			end
+		end
 	end
 
-	return 'HT20'
+	return htmode .. last_width
 end
 
 local function configure_mesh(radio, index, mesh_config)
@@ -134,7 +161,7 @@ local function set_channels(radio, radio_name, config)
 	uci:set('wireless', radio_name, 'channel', channel)
 
 	local chanlist
-	if radio.band == '5g' and is_outdoor() then
+	if radio.band == '5g' and wireless.is_outdoor(uci) then
 		chanlist = config.outdoor_chanlist()
 	end
 	uci:set('wireless', radio_name, 'channels', chanlist)
@@ -168,7 +195,7 @@ wireless.foreach_radio(uci, function(radio, index, config)
 
 	local band = radio.band
 	-- now we assign radios to roles
-	local roles = uci:get_list('gluon', 'band_' .. band, 'role')
+	local roles = wireless.radio_roles(uci, radio)
 	local enable_mesh = wireless.supports_channel(radio, config.channel()) and util.contains(roles, 'mesh')
 
 	if band == '2g' then
@@ -176,8 +203,12 @@ wireless.foreach_radio(uci, function(radio, index, config)
 		if enable_mesh then
 			configure_mesh(radio, index, config.mesh())
 		end
+	elseif band == '6g' then
+		if enable_mesh then
+			configure_mesh(radio, index, config.mesh())
+		end
 	elseif band == '5g' then
-		if is_outdoor() then
+		if wireless.is_outdoor(uci) then
 			-- enforce outdoor channels by filtering the regdom for outdoor channels
 			uci:set('wireless', radio_name, 'country3', '0x4f')
 		else

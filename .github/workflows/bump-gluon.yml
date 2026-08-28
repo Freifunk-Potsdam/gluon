@@ -17,7 +17,7 @@ jobs:
       COMMIT_EMAIL: bot@freifunk-gluon.github.io
     steps:
       - name: Clone Gluon
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.inputs.branch }}
       
@@ -30,7 +30,10 @@ jobs:
 
       - name: Link example Site
         run: ln -s docs/site-example site
-      
+
+      - name: Clone modules
+        run: make update
+
       - name: Invoke update-modules
         run: make update-modules
       

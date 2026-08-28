@@ -104,6 +104,7 @@ regdom \: optional
 wifi24 \: optional
   WLAN configuration for 2.4 GHz devices.
   ``channel`` must be set to a valid wireless channel for your radio.
+  ``channel_width`` can be specified to set a custom channel width per radio band in MHz. Can be 20, 40, 80 or 160.
   ``beacon_interval`` can be specified to set a custom beacon interval in
   time units (TU). A time unit is equivalent to 1024 µs.
   If not set, the default value of 100 TU (=102.4 ms) is used.
@@ -124,15 +125,8 @@ wifi24 \: optional
   For an OWE secured network, the ``owe_ssid`` string has to be set. It sets the
   SSID for the opportunistically encrypted wireless network, to which compatible
   clients can connect to.
-  For OWE to work, the ``wireless-encryption-wpa3`` has to be enabled as a feature
-  in your site.
-  To utilize the OWE transition mode, ``owe_transition_mode`` has to be set to true.
-  When ``owe_transition_mode`` is enabled, the OWE secured SSID will be hidden.
-  Compatible devices will automatically connect to the OWE secured SSID when selecting
-  the open SSID.
-  Note that for the transition mode to work, both ``ssid`` as well as ``owe_ssid``
-  have to be enabled. Also, some devices with a broken implementation might not be able
-  to connect with a transition-mode enabled network.
+  For OWE to work, the :doc:`wireless-encryption-wpa3 <../package/gluon-wireless-encryption-wpa3>`
+  feature has to be enabled and configured in your site.
 
   ``mesh`` requires a single parameter, a string, named ``id`` which sets the
   mesh id, also visible as an open WiFi in some network managers. Usually you
@@ -186,6 +180,19 @@ wifi5 \: optional
     wifi5 = {
       channel = 44,
       outdoor_chanlist = "100-140",
+
+      [...]
+    },
+
+.. _user-site-wifi6:
+
+wifi6 \: optional
+  Same as `wifi24` but for the 6 GHz radio.
+
+  ::
+
+    wifi6 = {
+      channel = 33,
 
       [...]
     },

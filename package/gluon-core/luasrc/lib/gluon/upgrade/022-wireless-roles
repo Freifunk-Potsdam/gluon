@@ -9,6 +9,7 @@ local wireless = require 'gluon.wireless'
 local default_wifi_roles = {
 	["2g"] = {},
 	["5g"] = {},
+	["6g"] = {},
 }
 
 -- enable client if it is not disabled
@@ -20,12 +21,19 @@ if site.wifi5.ap() and not site.wifi5.ap.disabled(false) then
 	util.add_to_set(default_wifi_roles['5g'], 'client')
 end
 
+if site.wifi6.ap() and not site.wifi6.ap.disabled(false) then
+	util.add_to_set(default_wifi_roles['6g'], 'client')
+end
+
 -- enable mesh if it is not disabled
 if site.wifi24.mesh() and not site.wifi24.mesh.disabled(false) then
 	util.add_to_set(default_wifi_roles['2g'], 'mesh')
 end
 if site.wifi5.mesh() and not site.wifi5.mesh.disabled(false) then
 	util.add_to_set(default_wifi_roles['5g'], 'mesh')
+end
+if site.wifi6.mesh() and not site.wifi6.mesh.disabled(false) then
+	util.add_to_set(default_wifi_roles['6g'], 'mesh')
 end
 
 local role_iface_names = {
@@ -86,13 +94,9 @@ for band, _ in pairs(default_wifi_roles) do
 end
 
 
-local function is_outdoor()
-	return uci:get_bool('gluon', 'wireless', 'outdoor')
-end
-
 -- Remove 5ghz mesh role configuration for outdoor
 local roles_5g = uci:get_list('gluon', 'band_5g', 'role')
-if util.contains(roles_5g, 'mesh') and is_outdoor() then
+if util.contains(roles_5g, 'mesh') and wireless.is_outdoor(uci) then
 	util.remove_from_set(roles_5g, 'mesh')
 	uci:set_list('gluon', 'band_5g', 'role', roles_5g)
 end

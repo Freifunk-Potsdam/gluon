@@ -25,10 +25,10 @@ jobs:
     outputs:
       targets: ${{ steps.filter.outputs.changes }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Filter targets based on changed files
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: .github/filters.yml
@@ -43,7 +43,7 @@ jobs:
         target: ${{ fromJSON(needs.changed.outputs.targets) }}
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Show system information
         run: contrib/actions/show-system-info.sh
@@ -62,19 +62,19 @@ jobs:
 
       - name: Archive build logs
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.target }}_logs
           path: openwrt/logs
 
       - name: Archive build output
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.target }}_output
           path: output
 
       - name: Archive metadata
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.target }}_metadata
           path: output/meta

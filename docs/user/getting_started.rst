@@ -8,7 +8,7 @@ Gluon's releases are managed using `Git tags`_. If you are just getting
 started with Gluon we recommend to use the latest stable release of Gluon.
 
 Take a look at the `list of gluon releases`_ and notice the latest release,
-e.g. *v2025.1*. Always get Gluon using git and don't try to download it
+e.g. *v2025.1.3*. Always get Gluon using git and don't try to download it
 as a Zip archive as the archive will be missing version information.
 
 Please keep in mind that there is no "default Gluon" build; a site configuration
@@ -25,14 +25,14 @@ An example configuration can be found in the Gluon repository at *docs/site-exam
 Dependencies
 ------------
 To build Gluon, several packages need to be installed on the system.
-On Debian Bookworm, you can install the required packages with the following command:
+On Debian Trixie, you can install the required packages with the following command:
 
 .. code-block:: sh
 
   apt install clang git python3 python3-dev python3-pyelftools \
   python3-setuptools build-essential gawk unzip libncurses5-dev \
   zlib1g-dev libssl-dev libelf-dev llvm wget rsync time qemu-utils \
-  ecdsautils swig
+  ecdsautils swig file
 
 We also provide a container environment that already tracks all these dependencies. It quickly gets you up and running, if you already have either Docker or Podman installed locally.
 
@@ -40,11 +40,32 @@ We also provide a container environment that already tracks all these dependenci
 
   ./scripts/container.sh
 
+If you intend to develop something in gluon, the container can sometimes be a bit too restrictive. E.g. you can not change out of the cwd, editors are not installed, push_pkg.sh does not work, ... For this case, we suggest to use debian inside `distrobox`_. Simply put, distrobox is a fancy wrapper around podman, docker, or lilipod to create and start containers which are highly integrated with the hosts.
+
+.. _distrobox: https://github.com/89luca89/distrobox
+
+To initially create a distrobox for gluon:
+
+.. code-block:: sh
+
+  distrobox create -n gluon --image debian:trixie
+  distrobox enter gluon
+  apt install ... # install packages mentioned above
+
+The container stays persistent. To reenter it, you can simply do:
+
+.. code-block:: sh
+
+  distrobox enter gluon
+
+Now, from this distrobox, you can browse your whole host file system, install more software, use push_pkg.sh, etc.
+
+
 Building the images
 -------------------
 
 To build Gluon, first check out the repository. Replace *RELEASE* with the
-version you'd like to checkout, e.g. *v2025.1*.
+version you'd like to checkout, e.g. *v2025.1.3*.
 
 ::
 
